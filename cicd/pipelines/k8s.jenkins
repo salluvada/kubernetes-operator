@@ -30,11 +30,12 @@ podTemplate(label: label,
         stage('Build in dotnetcore') {
             container('dotnetcore') {
                 sh 'echo "hello world"'
-                sh 'apk --no-cache --update add make git gcc libc-dev'
-                sh 'dotnet --version'
-                sh 'pwd'
-                sh 'cd DotNetCoreSampleApi'
-                sh 'dotnet build'
+                sh 'dotnet build ./DotNetCoreSampleApi'
+            }
+        }
+        stage('Run unit tests in dotnetcore') {
+            container('dotnetcore') {
+                sh 'dotnet test ./DotNetCoreSampleApi.Tests'
             }
         }
         stage('Run shell in go') {
