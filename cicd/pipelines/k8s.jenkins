@@ -30,12 +30,14 @@ podTemplate(label: label,
                 sh 'echo "hello world"'
                 sh 'apk --no-cache --update add make git gcc libc-dev'
                 sh 'dotnet --version'
+                sleep 300
             }
         }
         stage('Run shell in go') {
             container('go') {
                 sh 'echo "hello world"'
                 sh 'apk --no-cache --update add make git gcc libc-dev'
+                sleep 300
             }
         }
     }
