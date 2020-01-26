@@ -11,13 +11,21 @@ podTemplate(label: label,
                     name: 'go',
                     image: 'golang:1-alpine', 
                     command: 'cat', 
-                    ttyEnabled: true
+                    ttyEnabled: true,
+                    resourceRequestCpu: '500m',
+                    resourceLimitCpu: '1000m',
+                    resourceRequestMemory: '500Mi',
+                    resourceLimitMemory: '1Gi'
                 ),
                 containerTemplate(
                     name: 'alpine', 
-                    image: 'mcr.microsoft.com/dotnet/core/sdk:3.1.101-alpine3.10', 
+                    image: 'alpine:3.10.2', 
                     ttyEnabled: true, 
-                    command: 'cat'                   
+                    command: 'cat',
+                    resourceRequestCpu: '500m',
+                    resourceLimitCpu: '1000m',
+                    resourceRequestMemory: '500Mi',
+                    resourceLimitMemory: '1Gi'                    
                 ),
         ],
         ) {
@@ -26,13 +34,14 @@ podTemplate(label: label,
             container('alpine') {
                 sh 'echo "hello world"'
                 sh 'apk --no-cache --update add make git gcc libc-dev'
-                sh 'dotnet --version'
+                sh 'sleep 300'
             }
         }
         stage('Run shell in go') {
             container('go') {
                 sh 'echo "hello world"'
                 sh 'apk --no-cache --update add make git gcc libc-dev'
+                sh 'sleep 300'
             }
         }
     }
