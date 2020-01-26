@@ -2,7 +2,7 @@
 
 def label = "k8sagent-e2e"
 def home = "/home/jenkins"
-def workspace = "${home}/workspace/k8s-e2e"
+def workspace = "${home}/agent/workspace/k8s-e2e"
 
 podTemplate(label: label,
         containers: [
@@ -13,7 +13,7 @@ podTemplate(label: label,
                     ttyEnabled: true
                 ),
                 containerTemplate(
-                    name: 'alpine', 
+                    name: 'dotnetcore', 
                     image: 'mcr.microsoft.com/dotnet/core/sdk:3.1.101-alpine3.10', 
                     ttyEnabled: true, 
                     command: 'cat'                   
@@ -27,22 +27,20 @@ podTemplate(label: label,
         stage('Clone sources') {
             git url: 'https://github.com/CodingNagger/dotnetcore-sample'
         }
-        stage('Run shell') {
-            container('alpine') {
+        stage('Build in dotnetcore') {
+            container('dotnetcore') {
                 sh 'echo "hello world"'
                 sh 'apk --no-cache --update add make git gcc libc-dev'
                 sh 'dotnet --version'
                 sh 'pwd'
-                sh 'cd $WORKSPACEDIR'
-                sh 'ls -l'
-                sleep 300
+                sh 'cd DotNetCoreSampleApi'
+                sh 'dotnet build'
             }
         }
         stage('Run shell in go') {
             container('go') {
                 sh 'echo "hello world"'
                 sh 'apk --no-cache --update add make git gcc libc-dev'
-                sleep 300
             }
         }
     }
