@@ -7,13 +7,13 @@ def workspace = "${home}/agent/workspace/k8s-e2e"
 podTemplate(label: label,
         containers: [
                 containerTemplate(
-                    name: 'go',
-                    image: 'golang:1-alpine', 
+                    name: 'dotnetcore2.1',
+                    image: 'mcr.microsoft.com/dotnet/core/sdk:2.1.803-alpine3.10', 
                     command: 'cat', 
                     ttyEnabled: true
                 ),
                 containerTemplate(
-                    name: 'dotnetcore', 
+                    name: 'dotnetcore3.1', 
                     image: 'mcr.microsoft.com/dotnet/core/sdk:3.1.101-alpine3.10', 
                     ttyEnabled: true, 
                     command: 'cat'                   
@@ -27,21 +27,15 @@ podTemplate(label: label,
         stage('Clone sources') {
             git url: 'https://github.com/CodingNagger/dotnetcore-sample'
         }
-        stage('Build in dotnetcore') {
-            container('dotnetcore') {
+        stage('Build in dotnetcore3.1') {
+            container('dotnetcore3.1') {
                 sh 'echo "hello world"'
                 sh 'dotnet build ./DotNetCoreSampleApi'
             }
         }
-        stage('Run unit tests in dotnetcore') {
-            container('dotnetcore') {
+        stage('Run unit tests in dotnetcore2.1') {
+            container('dotnetcore2.1') {
                 sh 'dotnet test ./DotNetCoreSampleApi.Tests'
-            }
-        }
-        stage('Run shell in go') {
-            container('go') {
-                sh 'echo "hello world"'
-                sh 'apk --no-cache --update add make git gcc libc-dev'
             }
         }
     }
