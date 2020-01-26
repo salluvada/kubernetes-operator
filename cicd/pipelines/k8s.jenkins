@@ -2,8 +2,7 @@
 
 def label = "k8sagent-e2e"
 def home = "/home/jenkins"
-def workspace = "${home}/workspace/build-jenkins-operator"
-def workdir = "${workspace}/src/github.com/jenkinsci/kubernetes-operator/"
+def workspace = "${home}/workspace/k8s-e2e"
 
 podTemplate(label: label,
         containers: [
@@ -20,6 +19,9 @@ podTemplate(label: label,
                     command: 'cat'                   
                 ),
         ],
+        envVars: [
+            envVar(key: 'WORKSPACEDIR', value: workspace),
+        ],
         ) {
     node(label) {
         stage('Clone sources') {
@@ -30,6 +32,9 @@ podTemplate(label: label,
                 sh 'echo "hello world"'
                 sh 'apk --no-cache --update add make git gcc libc-dev'
                 sh 'dotnet --version'
+                sh 'pwd'
+                sh 'cd $WORKSPACEDIR'
+                sh 'ls -l'
                 sleep 300
             }
         }
