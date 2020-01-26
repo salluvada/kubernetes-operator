@@ -7,12 +7,19 @@ def workdir = "${workspace}/src/github.com/jenkinsci/kubernetes-operator/"
 
 podTemplate(label: label,
         containers: [
+                containerTemplate(name: 'go', image: 'golang:1-alpine', command: 'cat', ttyEnabled: true),
                 containerTemplate(name: 'alpine', image: 'alpine:3.10.2', ttyEnabled: true, command: 'cat'),
         ],
         ) {
     node(label) {
         stage('Run shell') {
             container('alpine') {
+                sh 'echo "hello world"'
+                sh 'apk --no-cache --update add make git gcc libc-dev'
+            }
+        }
+        stage('Run shell in go') {
+            container('go') {
                 sh 'echo "hello world"'
                 sh 'apk --no-cache --update add make git gcc libc-dev'
             }
