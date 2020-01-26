@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 
-pipelineJob('k8s-e2e') {
+pipelineJob('autoscaler-e2e') {
     displayName('Autoscaler Jenkins E2E test')
 
     logRotator {
