@@ -14,6 +14,7 @@ podTemplate(label: label,
         stage('Run shell') {
             container('alpine') {
                 sh 'echo "hello world"'
+                sh 'curl www.google.com'
             }
         }
     }

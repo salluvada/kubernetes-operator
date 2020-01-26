@@ -22,6 +22,7 @@ podTemplate(label: label,
                     checkout scm
                 }
                 container('go') {
+                    sh 'curl www.google.com'
                     sh 'apk --no-cache --update add make git gcc libc-dev'
                 }
             }
