@@ -22,6 +22,9 @@ podTemplate(label: label,
         ],
         ) {
     node(label) {
+        stage('Clone sources') {
+            git url: 'https://github.com/CodingNagger/dotnetcore-sample'
+        }
         stage('Run shell') {
             container('alpine') {
                 sh 'echo "hello world"'
