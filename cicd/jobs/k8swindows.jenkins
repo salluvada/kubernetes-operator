@@ -1,7 +1,7 @@
 #!/usr/bin/env groovy
 
-pipelineJob('autoscaler-e2e') {
-    displayName('Autoscaler Jenkins E2E test')
+pipelineJob('k8s-e2e-Windows') {
+    displayName('Kubernetes Plugin E2E Test Windows')
 
     logRotator {
         numToKeep(10)
@@ -25,7 +25,7 @@ pipelineJob('autoscaler-e2e') {
                     branches('*/master')
                 }
             }
-            scriptPath('cicd/pipelines/autoscaler.jenkins')
+            scriptPath('cicd/pipelines/k8swindows.jenkins')
         }
     }
 }

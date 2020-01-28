@@ -1,9 +1,8 @@
 #!/usr/bin/env groovy
 
-def label = "k8sagent-e2e"
+def label = "autoscaler-e2e-linux-${UUID.randomUUID().toString()}"
 def home = "/home/jenkins"
 def workspace = "${home}/workspace/build-jenkins-operator"
-def workdir = "${workspace}/src/github.com/jenkinsci/kubernetes-operator/"
 
 podTemplate(label: label,
         containers: [
@@ -28,20 +27,19 @@ podTemplate(label: label,
                     resourceLimitMemory: '1Gi'                    
                 ),
         ],
+        nodeSelector: 'beta.kubernetes.io/os: linux'
         ) {
     node(label) {
         stage('Run shell') {
             container('alpine') {
                 sh 'echo "hello world"'
                 sh 'apk --no-cache --update add make git gcc libc-dev'
-                sh 'sleep 300'
             }
         }
         stage('Run shell in go') {
             container('go') {
                 sh 'echo "hello world"'
                 sh 'apk --no-cache --update add make git gcc libc-dev'
-                sh 'sleep 300'
             }
         }
     }
