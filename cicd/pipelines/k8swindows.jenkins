@@ -13,12 +13,18 @@ spec:
     image: jenkins/jnlp-agent:latest-windows
   - name: dotnetcore21
     image: mcr.microsoft.com/dotnet/core/sdk:2.1.803
-    stdin: true
-    tty: true
+    command:
+    - powershell
+    args:
+    - Start-Sleep
+    - 999999
   - name: dotnetcore31
     image: mcr.microsoft.com/dotnet/core/sdk:2.1.803
-    stdin: true
-    tty: true
+    command:
+    - powershell
+    args:
+    - Start-Sleep
+    - 999999
   nodeSelector:
     beta.kubernetes.io/os: windows
 ''') {
