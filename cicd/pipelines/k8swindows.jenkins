@@ -4,27 +4,25 @@ def label = "k8sagent-e2e-windows"
 def home = "/home/jenkins"
 def workspace = "${home}/agent/workspace/k8s-e2e"
 
-podTemplate(label: label,
-        containers: [
-                containerTemplate(
-                    name: 'dotnetcore21',
-                    image: 'mcr.microsoft.com/dotnet/core/sdk:2.1.803', 
-                    command: 'cat', 
-                    ttyEnabled: true
-                ),
-                containerTemplate(
-                    name: 'dotnetcore31', 
-                    image: 'mcr.microsoft.com/dotnet/core/sdk:3.1.101', 
-                    ttyEnabled: true, 
-                    command: 'cat'                   
-                ),
-        ],
-        envVars: [
-            envVar(key: 'WORKSPACEDIR', value: workspace),
-        ],
-        nodeSelector: 'beta.kubernetes.io/os: windows'
-        ) {
-    node(label) {
+podTemplate(yaml: '''
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+  - name: jnlp
+    image: jenkins/jnlp-agent:latest-windows
+  - name: dotnetcore21
+    image: mcr.microsoft.com/dotnet/core/sdk:2.1.803
+    stdin: true
+    tty: true
+  - name: dotnetcore31
+    image: mcr.microsoft.com/dotnet/core/sdk:2.1.803
+    stdin: true
+    tty: true
+  nodeSelector:
+    beta.kubernetes.io/os: windows
+''') {
+    node(POD_LABEL) {
         stage('Clone sources') {
             git url: 'https://github.com/CodingNagger/dotnetcore-sample'
         }
