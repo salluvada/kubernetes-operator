@@ -14,10 +14,9 @@ spec:
   - name: shell
     image: mcr.microsoft.com/windows/servercore:ltsc2019
     command:
-    - powershell
-    args:
-    - Start-Sleep
-    - 999999
+    - powershell.exe
+    - -command
+    - "Start-Sleep 30000"
   nodeSelector:
     beta.kubernetes.io/os: windows
 ''') {
