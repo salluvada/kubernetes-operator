@@ -16,7 +16,7 @@ spec:
     resources:
       requests:
         cpu: "1"
-        memory: "500m"
+        memory: "2Gi"
   nodeSelector:
     beta.kubernetes.io/os: windows
 ''') {
