@@ -33,12 +33,12 @@ spec:
         }
         stage('Build in dotnetcore3.1') {
             container('dotnetcore31') {
-                cmd 'dotnet build ./DotNetCoreSampleApi'
+                pwsh 'dotnet build ./DotNetCoreSampleApi'
             }
         }
         stage('Run unit tests in dotnetcore2.1') {
             container('dotnetcore21') {
-                cmd 'dotnet test ./DotNetCoreSampleApi.Tests'
+                pwsh 'dotnet test ./DotNetCoreSampleApi.Tests'
             }
         }
     }
