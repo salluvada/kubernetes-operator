@@ -18,16 +18,12 @@ spec:
       value: "jenkins-operator-slave-example.default.svc.cluster.local:50000"
   - name: dotnetcore21
     image: mcr.microsoft.com/dotnet/core/sdk:2.1.803
-    command:
-    - cmd
-    - ping 
-    - "localhost -n 900 > NUL"
+    stdin: true
+    tty: true
   - name: dotnetcore31
-    image: mcr.microsoft.com/dotnet/core/sdk:2.1.803
-    command:
-    - cmd
-    - ping
-    - "localhost -n 900 > NUL"
+    image: mcr.microsoft.com/dotnet/core/sdk:3.1.101
+    stdin: true
+    tty: true
   nodeSelector:
     beta.kubernetes.io/os: windows
 ''') {
