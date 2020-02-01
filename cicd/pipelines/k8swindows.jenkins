@@ -14,17 +14,13 @@ spec:
   - name: dotnetcore21
     image: mcr.microsoft.com/dotnet/core/sdk:2.1.803
     command:
-    - powershell
-    args:
-    - Start-Sleep
-    - 999999
+    - cmd
+    - ping localhost -n 3000 > NUL
   - name: dotnetcore31
-    image: mcr.microsoft.com/dotnet/core/sdk:2.1.803
+    image: mcr.microsoft.com/dotnet/core/sdk:3.1.101
     command:
-    - powershell
-    args:
-    - Start-Sleep
-    - 999999
+    - cmd
+    - ping localhost -n 3000 > NUL
   nodeSelector:
     beta.kubernetes.io/os: windows
 ''') {
