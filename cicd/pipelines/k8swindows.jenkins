@@ -11,33 +11,19 @@ spec:
   containers:
   - name: jnlp
     image: jenkins/jnlp-agent:latest-windows
-  - name: dotnetcore21
-    image: mcr.microsoft.com/dotnet/core/sdk:2.1.803
+  - name: shell
+    image: mcr.microsoft.com/windows/servercore:ltsc2019
     command:
-    - cmd
-    - ping localhost -n 3000 > NUL
-  - name: dotnetcore31
-    image: mcr.microsoft.com/dotnet/core/sdk:3.1.101
-    command:
-    - cmd
-    - ping localhost -n 3000 > NUL
+    - powershell
+    args:
+    - Start-Sleep
+    - 999999
   nodeSelector:
     beta.kubernetes.io/os: windows
 ''') {
     node(POD_LABEL) {
-        stage('Clone sources') {
-            git url: 'https://github.com/CodingNagger/dotnetcore-sample'
-        }
-        stage('Build in dotnetcore3.1') {
-            container('dotnetcore31') {
-                sh 'echo "hello world"'
-                sh 'dotnet build ./DotNetCoreSampleApi'
-            }
-        }
-        stage('Run unit tests in dotnetcore2.1') {
-            container('dotnetcore21') {
-                sh 'dotnet test ./DotNetCoreSampleApi.Tests'
-            }
+        container('shell') {
+            powershell 'Get-ChildItem Env: | Sort Name'
         }
     }
 }
