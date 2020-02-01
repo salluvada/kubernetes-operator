@@ -11,11 +11,11 @@ spec:
   containers:
   - name: jnlp
     image: jenkins/jnlp-agent:latest-windows
-  - name: shell
-    image: mcr.microsoft.com/windows/servercore/iis
-  - env:
+    env:
     - name: "JENKINS_URL"
       value: "http://jenkins-operator-http-example.default.svc.cluster.local:8080"
+  - name: shell
+    image: mcr.microsoft.com/windows/servercore/iis
   nodeSelector:
     beta.kubernetes.io/os: windows
 ''') {
