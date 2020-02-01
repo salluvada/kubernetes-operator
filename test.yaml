@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: testpowershell
+spec:
+  containers:
+  - name: shell
+    image: mcr.microsoft.com/windows/servercore/iis
+  nodeSelector:
+    beta.kubernetes.io/os: windows
