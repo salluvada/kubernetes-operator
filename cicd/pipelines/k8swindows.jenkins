@@ -12,11 +12,12 @@ spec:
   - name: jnlp
     image: jenkins/jnlp-agent:latest-windows
   - name: shell
-    image: mcr.microsoft.com/windows/servercore:ltsc2019
+    image: mcr.microsoft.com/powershell:preview-windowsservercore-1809
     command:
-    - powershell.exe
-    - -command
-    - "Start-Sleep 30000"
+    - powershell
+    args:
+    - Start-Sleep
+    - 999999
   nodeSelector:
     beta.kubernetes.io/os: windows
 ''') {
