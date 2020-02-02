@@ -16,10 +16,6 @@ spec:
       value: "http://jenkins-operator-http-example.default.svc.cluster.local:8080"
     - name: "JENKINS_TUNNEL"
       value: "jenkins-operator-slave-example.default.svc.cluster.local:50000"
-  - name: dotnetcore21
-    image: mcr.microsoft.com/dotnet/core/sdk:2.1.803
-    stdin: true
-    tty: true
   - name: dotnetcore31
     image: mcr.microsoft.com/dotnet/core/sdk:3.1.101
     stdin: true
@@ -34,11 +30,6 @@ spec:
         stage('Build in dotnetcore3.1') {
             container('dotnetcore31') {
                 pwsh 'dotnet build ./DotNetCoreSampleApi'
-            }
-        }
-        stage('Run unit tests in dotnetcore2.1') {
-            container('dotnetcore21') {
-                pwsh 'dotnet test ./DotNetCoreSampleApi.Tests'
             }
         }
     }
