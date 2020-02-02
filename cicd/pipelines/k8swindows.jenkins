@@ -15,7 +15,7 @@ spec:
     - name: "JENKINS_URL"
       value: "http://jenkins-operator-http-scdmkubejenkins.default.svc.cluster.local:8080"
     - name: "JENKINS_TUNNEL"
-      value: "jenkins-operator-http-scdmkubejenkins.default.svc.cluster.local:50000"
+      value: "jenkins-operator-slave-scdmkubejenkins.default.svc.cluster.local:50000"
   - name: dotnetcore31
     image: mcr.microsoft.com/dotnet/core/sdk:3.1.101
     stdin: true
