@@ -13,7 +13,7 @@ podTemplate(label: label,
                     ttyEnabled: true,
                     resourceRequestCpu: '500m',
                     resourceLimitCpu: '1000m',
-                    resourceRequestMemory: '500Mi',
+                    resourceRequestMemory: '1Gi',
                     resourceLimitMemory: '1Gi'
                 ),
                 containerTemplate(
@@ -23,8 +23,8 @@ podTemplate(label: label,
                     command: 'cat',
                     resourceRequestCpu: '500m',
                     resourceLimitCpu: '1000m',
-                    resourceRequestMemory: '500Mi',
-                    resourceLimitMemory: '1Gi'                    
+                    resourceRequestMemory: '1Gi',
+                    resourceLimitMemory: '1Gi'
                 ),
         ],
         nodeSelector: 'beta.kubernetes.io/os: linux'
