@@ -402,7 +402,7 @@ func (r *ReconcileJenkinsBaseConfiguration) ensureExtraRBAC(meta metav1.ObjectMe
 	}
 
 	roleBindings := &rbacv1.RoleBindingList{}
-	err = r.Client.List(context.TODO(), &client.ListOptions{Namespace: r.Configuration.Jenkins.Namespace}, roleBindings)
+	err = r.Client.List(context.TODO(), roleBindings, client.InNamespace(r.Configuration.Jenkins.Namespace))
 	if err != nil {
 		return stackerr.WithStack(err)
 	}
@@ -619,6 +619,12 @@ func (r *ReconcileJenkinsBaseConfiguration) checkForPodRecreation(currentJenkins
 		messages = append(messages, "Jenkins pod node selector has changed")
 		verbose = append(verbose, fmt.Sprintf("Jenkins pod node selector has changed, actual '%+v' required '%+v'",
 			currentJenkinsMasterPod.Spec.NodeSelector, r.Configuration.Jenkins.Spec.Master.NodeSelector))
+	}
+
+	if !compareMap(r.Configuration.Jenkins.Spec.Master.Labels, currentJenkinsMasterPod.Labels) {
+		messages = append(messages, "Jenkins pod labels have changed")
+		verbose = append(verbose, fmt.Sprintf("Jenkins pod labels have changed, actual '%+v' required '%+v'",
+			currentJenkinsMasterPod.Labels, r.Configuration.Jenkins.Spec.Master.Labels))
 	}
 
 	if !compareMap(r.Configuration.Jenkins.Spec.Master.Annotations, currentJenkinsMasterPod.ObjectMeta.Annotations) {
@@ -851,7 +857,7 @@ func (r *ReconcileJenkinsBaseConfiguration) detectJenkinsMasterPodStartingIssues
 		now := time.Now().UTC()
 		if now.After(timeout) {
 			events := &corev1.EventList{}
-			err = r.Client.List(context.TODO(), &client.ListOptions{Namespace: r.Configuration.Jenkins.Namespace}, events)
+			err = r.Client.List(context.TODO(), events, client.InNamespace(r.Configuration.Jenkins.Namespace))
 			if err != nil {
 				return false, stackerr.WithStack(err)
 			}

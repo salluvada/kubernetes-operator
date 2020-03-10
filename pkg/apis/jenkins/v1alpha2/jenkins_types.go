@@ -269,6 +269,13 @@ type JenkinsMaster struct {
 	// +optional
 	AnnotationsDeprecated map[string]string `json:"masterAnnotations,omitempty"`
 
+	// Map of string keys and values that can be used to organize and categorize
+	// (scope and select) objects. May match selectors of replication controllers
+	// and services.
+	// More info: http://kubernetes.io/docs/user-guide/labels
+	// +optional
+	Labels map[string]string `json:"labels,omitempty"`
+
 	// NodeSelector is a selector which must be true for the pod to fit on a node.
 	// Selector which must match a node's labels for the pod to be scheduled on that node.
 	// More info: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
@@ -545,6 +552,10 @@ type SeedJob struct {
 	// +optional
 	JenkinsCredentialType JenkinsCredentialType `json:"credentialType,omitempty"`
 
+	// BitbucketPushTrigger is used for Bitbucket web hooks
+	// +optional
+	BitbucketPushTrigger bool `json:"bitbucketPushTrigger"`
+
 	// GitHubPushTrigger is used for GitHub web hooks
 	// +optional
 	GitHubPushTrigger bool `json:"githubPushTrigger"`
@@ -618,7 +629,7 @@ type AppliedGroovyScript struct {
 	// Name is the name of the groovy script
 	Name string `json:"name"`
 	// Hash is the hash of the groovy script and secrets which it uses
-	Hash string
+	Hash string `json:"hash"`
 }
 
 // SecretRef is reference to Kubernetes secret
@@ -639,10 +650,10 @@ type Customization struct {
 
 // GroovyScripts defines configuration of Jenkins customization via groovy scripts
 type GroovyScripts struct {
-	Customization
+	Customization `json:",inline"`
 }
 
 // ConfigurationAsCode defines configuration of Jenkins customization via Configuration as Code Jenkins plugin
 type ConfigurationAsCode struct {
-	Customization
+	Customization `json:",inline"`
 }

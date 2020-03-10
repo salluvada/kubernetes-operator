@@ -2,10 +2,11 @@ package e2e
 
 import (
 	goctx "context"
-	"golang.org/x/net/context"
 	"net/http"
 	"testing"
 	"time"
+
+	"golang.org/x/net/context"
 
 	"github.com/jenkinsci/kubernetes-operator/internal/try"
 	"github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2"
@@ -75,7 +76,7 @@ func waitForJenkinsBaseConfigurationToComplete(t *testing.T, jenkins *v1alpha2.J
 func waitForRecreateJenkinsMasterPod(t *testing.T, jenkins *v1alpha2.Jenkins) {
 	err := wait.Poll(retryInterval, 30*retryInterval, func() (bool, error) {
 		lo := metav1.ListOptions{
-			LabelSelector: labels.SelectorFromSet(resources.BuildResourceLabels(jenkins)).String(),
+			LabelSelector: labels.SelectorFromSet(resources.GetJenkinsMasterPodLabels(*jenkins)).String(),
 		}
 		podList, err := framework.Global.KubeClient.CoreV1().Pods(jenkins.ObjectMeta.Namespace).List(lo)
 		if err != nil {
@@ -136,7 +137,7 @@ func WaitUntilJenkinsConditionSet(retryInterval time.Duration, retries int, jenk
 func waitUntilNamespaceDestroyed(namespace string) error {
 	err := try.Until(func() (bool, error) {
 		var namespaceList v1.NamespaceList
-		err := framework.Global.Client.List(context.TODO(), &client.ListOptions{}, &namespaceList)
+		err := framework.Global.Client.List(context.TODO(), &namespaceList, &client.ListOptions{})
 		if err != nil {
 			return true, err
 		}

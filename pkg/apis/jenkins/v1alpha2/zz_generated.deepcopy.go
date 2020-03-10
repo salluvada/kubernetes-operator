@@ -257,7 +257,7 @@ func (in *JenkinsAPISettings) DeepCopy() *JenkinsAPISettings {
 func (in *JenkinsList) DeepCopyInto(out *JenkinsList) {
 	*out = *in
 	out.TypeMeta = in.TypeMeta
-	out.ListMeta = in.ListMeta
+	in.ListMeta.DeepCopyInto(&out.ListMeta)
 	if in.Items != nil {
 		in, out := &in.Items, &out.Items
 		*out = make([]Jenkins, len(*in))
@@ -298,6 +298,13 @@ func (in *JenkinsMaster) DeepCopyInto(out *JenkinsMaster) {
 	}
 	if in.AnnotationsDeprecated != nil {
 		in, out := &in.AnnotationsDeprecated, &out.AnnotationsDeprecated
+		*out = make(map[string]string, len(*in))
+		for key, val := range *in {
+			(*out)[key] = val
+		}
+	}
+	if in.Labels != nil {
+		in, out := &in.Labels, &out.Labels
 		*out = make(map[string]string, len(*in))
 		for key, val := range *in {
 			(*out)[key] = val
