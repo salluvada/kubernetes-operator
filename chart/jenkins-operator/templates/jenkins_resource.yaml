@@ -35,8 +35,13 @@ spec:
         requests:
           cpu: "1"
           memory: 500Mi
+    
+    
     nodeSelector:
         beta.kubernetes.io/os: linux
+    plugins:
+    - name: github
+      version: 1.29.5
   seedJobs:
   - id: jenkins-operator
     targets: "cicd/jobs/*.jenkins"
