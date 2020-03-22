@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: project-matrix-auth-configuration-casc-small
+data:
+  1-project-matrix-auth.yaml: | 
+    jenkins:
+      authorizationStrategy:
+          projectMatrix:
+            permissions:
+            - "Overall/Administer:kum3028"

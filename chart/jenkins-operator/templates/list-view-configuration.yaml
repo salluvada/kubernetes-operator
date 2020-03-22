@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: list-view-configuration
+data:
+  1-create-view.groovy: | 
+    import jenkins.model.Jenkins
+    import hudson.model.ListView
+
+    println "--> creating view Kubernetes Jobs"
+    // get Jenkins instance
+    Jenkins jenkins = Jenkins.getInstance()
+
+    // variables
+    def viewName = 'Kubernetes Jobs'
+    def myView = hudson.model.Hudson.instance.getView(viewName)
+
+    if (myView)
+    {
+        myView.setIncludeRegex("k8s.*")
+    } else {
+        jenkins.addView(new ListView(viewName))
+        myView = hudson.model.Hudson.instance.getView(viewName)
+        myView.setIncludeRegex("k8s.*")
+    }
+
+    // save current Jenkins state to disk
+    jenkins.save()

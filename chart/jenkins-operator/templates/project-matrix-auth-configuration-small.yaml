@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: project-matrix-auth-configuration-small
+data:
+  1-project-matrix-auth.groovy: | 
+
+    import hudson.security.*;
+    import hudson.model.*;
+    import hudson.scm.*;
+    import org.jfrog.hudson.*;
+    import com.cloudbees.plugins.credentials.*;
+
+    def instance = Jenkins.getInstance()
+
+    def pms = new ProjectMatrixAuthorizationStrategy()
+    pms.add(Jenkins.ADMINISTER, "kum3028")
+    pms.add(com.cloudbees.plugins.credentials.CredentialsProvider.CREATE,"App - Jenkins Administrators")
+    pms.add(com.cloudbees.plugins.credentials.CredentialsProvider.CREATE,"ham7651")
+    pms.add(com.cloudbees.plugins.credentials.CredentialsProvider.CREATE,"scdm administrators")
+    pms.add(com.cloudbees.plugins.credentials.CredentialsProvider.DELETE,"App - Jenkins Administrators")
+    pms.add(com.cloudbees.plugins.credentials.CredentialsProvider.DELETE,"ham7651")
+    pms.add(com.cloudbees.plugins.credentials.CredentialsProvider.DELETE,"scdm administrators")
+    pms.add(com.cloudbees.plugins.credentials.CredentialsProvider.MANAGE_DOMAINS,"App - Jenkins Administrators")
+    pms.add(com.cloudbees.plugins.credentials.CredentialsProvider.MANAGE_DOMAINS,"ham7651")
+    pms.add(com.cloudbees.plugins.credentials.CredentialsProvider.MANAGE_DOMAINS,"scdm administrators")
+    pms.add(com.cloudbees.plugins.credentials.CredentialsProvider.UPDATE,"App - Jenkins Administrators")
+    pms.add(com.cloudbees.plugins.credentials.CredentialsProvider.UPDATE,"ham7651")
+    pms.add(com.cloudbees.plugins.credentials.CredentialsProvider.UPDATE,"scdm administrators")
+    pms.add(com.cloudbees.plugins.credentials.CredentialsProvider.VIEW,"App - Jenkins Administrators")
+    pms.add(com.cloudbees.plugins.credentials.CredentialsProvider.VIEW,"ham7651")
+    pms.add(com.cloudbees.plugins.credentials.CredentialsProvider.VIEW,"scdm administrators")
+
+    instance.setAuthorizationStrategy(pms)
+    instance.save()

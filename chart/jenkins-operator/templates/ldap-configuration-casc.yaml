@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ldap-configuration-casc
+data:
+  1-integrate-ldap.yaml: | 
+    jenkins:
+      securityRealm:
+        ldap:
+          configurations:
+          - displayNameAttributeName: "displayName"
+            inhibitInferRootDN: false
+            managerDN: "KUM3028@sai"
+            managerPasswordSecret: "{AQAAABAAAAAQvbL7TlkB/yJSedh/j40NhGlV9LnLV4Y4bUblOHHouDo=}"
+            rootDN: "OU=User Objects,DC=corp,DC=stateauto;DC=com"
+            server: "ldap.corp.stateauto.com:389"
+            userSearch: "sAMAccountName={0}"
+          disableMailAddressResolver: false
+          groupIdStrategy: "caseInsensitive"
+          userIdStrategy: "caseInsensitive"
