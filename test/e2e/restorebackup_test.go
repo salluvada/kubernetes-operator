@@ -116,6 +116,12 @@ func createJenkinsWithBackupAndRestoreConfigured(t *testing.T, name, namespace s
 				Containers: []v1alpha2.Container{
 					{
 						Name: resources.JenkinsMasterContainerName,
+						VolumeMounts: []corev1.VolumeMount{
+							{
+								Name:      "plugins-cache",
+								MountPath: "/usr/share/jenkins/ref/plugins",
+							},
+						},
 					},
 					{
 						Name:            containerName,
@@ -150,6 +156,12 @@ func createJenkinsWithBackupAndRestoreConfigured(t *testing.T, name, namespace s
 							PersistentVolumeClaim: &corev1.PersistentVolumeClaimVolumeSource{
 								ClaimName: pvcName,
 							},
+						},
+					},
+					{
+						Name: "plugins-cache",
+						VolumeSource: corev1.VolumeSource{
+							EmptyDir: &corev1.EmptyDirVolumeSource{},
 						},
 					},
 				},
