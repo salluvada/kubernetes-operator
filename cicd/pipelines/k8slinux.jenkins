@@ -16,7 +16,7 @@ podTemplate(label: label,
         envVars: [
             envVar(key: 'WORKSPACEDIR', value: workspace),
         ],
-        nodeSelector: 'beta.kubernetes.io/os: linux'
+        nodeSelector: 'beta.kubernetes.io/os=linux'
         ) {
     node(label) {
         stage('Clone sources') {

@@ -27,7 +27,7 @@ podTemplate(label: label,
                     resourceLimitMemory: '1Gi'
                 ),
         ],
-        nodeSelector: 'beta.kubernetes.io/os: linux'
+        nodeSelector: 'beta.kubernetes.io/os=linux'
         ) {
     node(label) {
         stage('Run shell') {

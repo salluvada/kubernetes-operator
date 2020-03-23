@@ -22,7 +22,7 @@ pipelineJob('autoscaler-e2e-linux') {
                         url('https://github.com/salluvada/kubernetes-operator.git')
                         credentials('jenkins-operator')
                     }
-                    branches('*/master')
+                    branches('*/customizations')
                 }
             }
             scriptPath('cicd/pipelines/autoscalerlinux.jenkins')

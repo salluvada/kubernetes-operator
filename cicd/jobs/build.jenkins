@@ -22,7 +22,7 @@ pipelineJob('build-jenkins-operator') {
                         url('https://github.com/salluvada/kubernetes-operator.git')
                         credentials('jenkins-operator')
                     }
-                    branches('*/master')
+                    branches('*/customizations')
                 }
             }
             scriptPath('cicd/pipelines/build.jenkins')
