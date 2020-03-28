@@ -12,7 +12,7 @@ import (
 type Plugin struct {
 	Name                     string `json:"name"`
 	Version                  string `json:"version"`
-	DownloadURL              string `json:"downloadurl"`
+	DownloadURL              string `json:"downloadURL"`
 	rootPluginNameAndVersion string
 }
 
@@ -49,28 +49,28 @@ func New(nameWithVersion string) (*Plugin, error) {
 }
 
 // NewPlugin creates plugin from name and version, for example "name-of-plugin:0.0.1"
-func NewPlugin(name, version, downloadurl string) (*Plugin, error) {
-	if err := validatePlugin(name, version, downloadurl); err != nil {
+func NewPlugin(name, version, downloadURL string) (*Plugin, error) {
+	if err := validatePlugin(name, version, downloadURL); err != nil {
 		return nil, err
 	}
 
 	return &Plugin{
 		Name:        name,
 		Version:     version,
-		DownloadURL: downloadurl,
+		DownloadURL: downloadURL,
 	}, nil
 }
 
-func validatePlugin(name, version, downloadurl string) error {
+func validatePlugin(name, version, downloadURL string) error {
 	if ok := NamePattern.MatchString(name); !ok {
 		return errors.Errorf("invalid plugin name '%s:%s', must follow pattern '%s'", name, version, NamePattern.String())
 	}
 	if ok := VersionPattern.MatchString(version); !ok {
 		return errors.Errorf("invalid plugin version '%s:%s', must follow pattern '%s'", name, version, VersionPattern.String())
 	}
-	if downloadurl != "" {
-		if ok := DownloadURLPattern.MatchString(downloadurl); !ok {
-			return errors.Errorf("invalid download url '%s' for plugin name %s:%s, must follow pattern '%s'", downloadurl, name, version, DownloadURLPattern.String())
+	if len(downloadURL) > 0 {
+		if ok := DownloadURLPattern.MatchString(downloadURL); !ok {
+			return errors.Errorf("invalid download URL '%s' for plugin name %s:%s, must follow pattern '%s'", downloadURL, name, version, DownloadURLPattern.String())
 		}
 	}
 	return nil

@@ -250,7 +250,7 @@ type Plugin struct {
 	// Version is the version of Jenkins plugin
 	Version string `json:"version"`
 	// DownloadURL is the custom url from where plugin has to be downloaded.
-	DownloadURL string `json:"downloadurl"`
+	DownloadURL string `json:"downloadURL,omitempty"`
 }
 
 // JenkinsMaster defines the Jenkins master pod attributes and plugins,

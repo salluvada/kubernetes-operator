@@ -48,12 +48,16 @@ func TestValidatePlugin(t *testing.T) {
 		got := validatePlugin("!", validPluginVersion, "")
 		assert.Error(t, got)
 	})
-	t.Run("invalid download url", func(t *testing.T) {
+	t.Run("invalid download URL", func(t *testing.T) {
 		got := validatePlugin(validPluginName, validPluginVersion, "http://www.jenkins/plugin.hpi")
 		assert.Error(t, got)
 	})
-	t.Run("valid download url", func(t *testing.T) {
+	t.Run("valid http download URL", func(t *testing.T) {
 		got := validatePlugin(validPluginName, validPluginVersion, "http://www.jenkins.com/plugin.hpi")
+		assert.NoError(t, got)
+	})
+	t.Run("valid https download URL", func(t *testing.T) {
+		got := validatePlugin(validPluginName, validPluginVersion, "https://www.jenkins.com/plugin.hpi")
 		assert.NoError(t, got)
 	})
 }
