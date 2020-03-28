@@ -143,6 +143,7 @@ func createJenkinsCR(t *testing.T, name, namespace string, seedJob *[]v1alpha2.S
 					{Name: "audit-trail", Version: "2.4"},
 					{Name: "simple-theme-plugin", Version: "0.5.1"},
 					{Name: "github", Version: "1.29.4"},
+					{Name: "devoptics", Version: "latest", DownloadURL: "https://jenkins-updates.cloudbees.com/download/plugins/devoptics/latest/devoptics.hpi"},
 				},
 				NodeSelector: map[string]string{"kubernetes.io/os": "linux"},
 				Volumes: []corev1.Volume{

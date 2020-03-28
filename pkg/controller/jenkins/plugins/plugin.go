@@ -12,6 +12,7 @@ import (
 type Plugin struct {
 	Name                     string `json:"name"`
 	Version                  string `json:"version"`
+	DownloadURL              string `json:"downloadurl"`
 	rootPluginNameAndVersion string
 }
 
@@ -24,6 +25,8 @@ var (
 	NamePattern = regexp.MustCompile(`^[0-9a-zA-Z-_]+$`)
 	// VersionPattern is the plugin version regex pattern
 	VersionPattern = regexp.MustCompile(`^[0-9a-zA-Z+\\.-]+$`)
+	// DownloadURLPattern is the plugin download url regex pattern
+	DownloadURLPattern = regexp.MustCompile(`https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)`)
 )
 
 // New creates plugin from string, for example "name-of-plugin:0.0.1"
@@ -35,7 +38,7 @@ func New(nameWithVersion string) (*Plugin, error) {
 	name := val[0]
 	version := val[1]
 
-	if err := validatePlugin(name, version); err != nil {
+	if err := validatePlugin(name, version, ""); err != nil {
 		return nil, err
 	}
 
@@ -46,23 +49,29 @@ func New(nameWithVersion string) (*Plugin, error) {
 }
 
 // NewPlugin creates plugin from name and version, for example "name-of-plugin:0.0.1"
-func NewPlugin(name, version string) (*Plugin, error) {
-	if err := validatePlugin(name, version); err != nil {
+func NewPlugin(name, version, downloadurl string) (*Plugin, error) {
+	if err := validatePlugin(name, version, downloadurl); err != nil {
 		return nil, err
 	}
 
 	return &Plugin{
-		Name:    name,
-		Version: version,
+		Name:        name,
+		Version:     version,
+		DownloadURL: downloadurl,
 	}, nil
 }
 
-func validatePlugin(name, version string) error {
+func validatePlugin(name, version, downloadurl string) error {
 	if ok := NamePattern.MatchString(name); !ok {
 		return errors.Errorf("invalid plugin name '%s:%s', must follow pattern '%s'", name, version, NamePattern.String())
 	}
 	if ok := VersionPattern.MatchString(version); !ok {
 		return errors.Errorf("invalid plugin version '%s:%s', must follow pattern '%s'", name, version, VersionPattern.String())
+	}
+	if downloadurl != "" {
+		if ok := DownloadURLPattern.MatchString(downloadurl); !ok {
+			return errors.Errorf("invalid download url '%s' for plugin name %s:%s, must follow pattern '%s'", downloadurl, name, version, DownloadURLPattern.String())
+		}
 	}
 	return nil
 }
