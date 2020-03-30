@@ -1,0 +1,132 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jenkins-deployment
+  namespace: default
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 2
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      name: jenkins-app
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        name: jenkins-app
+    spec:
+      containers:
+      - command:
+        - bash
+        - -c
+        - /var/jenkins/scripts/init.sh && exec /sbin/tini -s -- /usr/local/bin/jenkins.sh
+        env:
+        - name: JAVA_OPTS
+          value: -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1
+            -Djenkins.install.runSetupWizard=false -Djava.awt.headless=true
+        - name: JENKINS_HOME
+          value: /var/jenkins/jenkins
+        image: jenkins/jenkins:lts
+        imagePullPolicy: Always
+        livenessProbe:
+          failureThreshold: 50
+          httpGet:
+            path: /login
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 530
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        name: jenkins-master
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        - containerPort: 50000
+          name: slavelistener
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 50
+          httpGet:
+            path: /login
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources:
+          limits:
+            cpu: 1500m
+            memory: 3Gi
+          requests:
+            cpu: "1"
+            memory: 500Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /var/jenkins/jenkins
+          name: jenkins-home
+        - mountPath: /var/jenkins/jenkins/jobs
+          name: jenkins-jobs
+        - mountPath: /var/jenkins/scripts
+          name: scripts
+          readOnly: true
+        - mountPath: /var/jenkins/init-configuration
+          name: init-configuration
+          readOnly: true
+        - mountPath: /var/jenkins/operator-credentials
+          name: operator-credentials
+          readOnly: true
+        - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+          name: jenkins-operator-example-token-jwgqh
+          readOnly: true
+      dnsPolicy: ClusterFirst
+      enableServiceLinks: true
+      nodeName: minikube
+      priority: 0
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext:
+        fsGroup: 1000
+        runAsUser: 1000
+      serviceAccount: jenkins-operator-example
+      serviceAccountName: jenkins-operator-example
+      terminationGracePeriodSeconds: 30
+      tolerations:
+      - effect: NoExecute
+        key: node.kubernetes.io/not-ready
+        operator: Exists
+        tolerationSeconds: 300
+      - effect: NoExecute
+        key: node.kubernetes.io/unreachable
+        operator: Exists
+        tolerationSeconds: 300
+      volumes:
+      - persistentVolumeClaim:
+          claimName: jenkins-pvc
+        name: jenkins-jobs
+      - emptyDir: {}
+        name: jenkins-home
+      - configMap:
+          defaultMode: 511
+          name: jenkins-operator-scripts-example
+        name: scripts
+      - configMap:
+          defaultMode: 420
+          name: jenkins-operator-init-configuration-example
+        name: init-configuration
+      - name: operator-credentials
+        secret:
+          defaultMode: 420
+          secretName: jenkins-operator-credentials-example
+      - name: jenkins-operator-example-token-jwgqh
+        secret:
+          defaultMode: 420
+          secretName: jenkins-operator-example-token-jwgqh
